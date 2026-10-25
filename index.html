@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>mwah. — lipstick that winks back</title>
+  <meta name="description" content="mwah. lipstick: five shades, 12-hour wear, zero transfer drama. Wink once for classic, twice for chaos.">
+  <meta name="theme-color" content="#6a0614">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 120'%3E%3Cpath fill='%23c1121f' d='M4 60C30 52 52 18 76 20c12 1 19 10 24 12 5-2 12-11 24-12 24-2 46 32 72 40-26 2-56 6-96 4C60 66 30 62 4 60Zm4 4c26 2 58 6 92 4 34 2 66-2 92-4-14 28-52 50-92 50S22 92 8 64Z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.js",
+        "three/addons/environments/RoomEnvironment.js": "./vendor/RoomEnvironment.js"
+      }
+    }
+  </script>
+</head>
+<body class="is-loading">
+
+  <!-- Shared SVG: lip print, rough-edge filter, crease mask -->
+  <svg class="sr-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="g-gold" x1="0" x2="1">
+        <stop offset="0" stop-color="#8a6a3c" /><stop offset=".35" stop-color="#f3d9a4" /><stop offset=".55" stop-color="#d9b27a" /><stop offset="1" stop-color="#7a5a30" />
+      </linearGradient>
+      <linearGradient id="g-case" x1="0" x2="1">
+        <stop offset="0" stop-color="#0d0204" /><stop offset=".4" stop-color="#3a0610" /><stop offset=".6" stop-color="#22030a" /><stop offset="1" stop-color="#0d0204" />
+      </linearGradient>
+      <linearGradient id="g-bullet" x1="0" x2="1">
+        <stop offset="0" stop-color="#000" stop-opacity=".35" /><stop offset=".45" stop-color="#fff" stop-opacity=".12" /><stop offset="1" stop-color="#000" stop-opacity=".4" />
+      </linearGradient>
+      <filter id="rough" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n" />
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="6" />
+      </filter>
+      <mask id="crease" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="120">
+        <rect width="200" height="120" fill="#fff" />
+        <g stroke="#000" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".75">
+          <path d="M40 54l-4-14M52 56l-3-20M64 58l-2-24M76 60l-1-26M88 60v-24M112 60v-24M124 60l1-26M136 58l2-24M148 56l3-20M160 54l4-14" />
+          <path d="M36 72l-5 10M48 74l-4 18M60 75l-3 22M72 76l-2 26M84 76l-1 28M96 76v30M108 76v30M120 76l1 28M132 76l2 26M144 75l3 22M156 74l4 18M168 72l5 10" />
+          <path d="M8 62c40 4 80 6 184 0" stroke-width="3" />
+        </g>
+      </mask>
+      <symbol id="lips" viewBox="0 0 200 120">
+        <g mask="url(#crease)" filter="url(#rough)">
+          <path fill="currentColor" d="M4 60C30 52 52 18 76 20c12 1 19 10 24 12 5-2 12-11 24-12 24-2 46 32 72 40-26 2-56 6-96 4C60 66 30 62 4 60Z" />
+          <path fill="currentColor" d="M8 64c26 2 58 6 92 4 34 2 66-2 92-4-14 28-52 50-92 50S22 92 8 64Z" />
+        </g>
+      </symbol>
+      <symbol id="lips-solid" viewBox="0 0 200 120">
+        <path fill="currentColor" d="M4 60C30 52 52 18 76 20c12 1 19 10 24 12 5-2 12-11 24-12 24-2 46 32 72 40-26 2-56 6-96 4C60 66 30 62 4 60Zm4 4c26 2 58 6 92 4 34 2 66-2 92-4-14 28-52 50-92 50S22 92 8 64Z" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- Preloader -->
+  <div class="loader" aria-live="polite">
+    <div class="loader__half loader__half--l"></div>
+    <div class="loader__half loader__half--r"></div>
+    <div class="loader__inner">
+      <div class="loader__tube" aria-hidden="true">
+        <span class="loader__bullet"></span>
+        <span class="loader__case"></span>
+      </div>
+      <div class="loader__count"><span class="loader__num">0</span><sup>%</sup></div>
+      <div class="loader__msg">applying<span>…</span></div>
+    </div>
+  </div>
+
+  <!-- Cursor -->
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__ring"><span class="cursor__label"></span></div>
+    <div class="cursor__dot"></div>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Nav -->
+  <header class="nav">
+    <a class="nav__logo" href="#top" data-cursor="mwah.">
+      <svg viewBox="0 0 200 120" aria-hidden="true"><use href="#lips-solid" /></svg>
+      <span>mwah.</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#shades">shades</a>
+      <a href="#bullet">the bullet</a>
+      <a href="#kiss">kiss wall</a>
+      <a href="#reviews">reviews</a>
+      <a href="#faq">faq</a>
+    </nav>
+    <div class="nav__right">
+      <button class="nav__sound" type="button" aria-pressed="false" data-cursor="vibes">
+        <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="nav__sound-label">sound off</span>
+      </button>
+      <button class="nav__bag" type="button" data-cursor="bag">
+        bag <span class="bag-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top" data-mode="classic" data-cursor="tap a side">
+      <div class="hero__theme" data-layer="base" data-mode="classic">
+        <div class="hero__half hero__half--l">
+          <div class="hero__content">
+            <h1 class="hero__word" aria-label="Lipstick">
+              <span class="w"><span class="ch">L</span><span class="ch">I</span><span class="ch">P</span><span class="ch">S</span></span><span class="w"><span class="ch">T</span><span class="ch">I</span><span class="ch">C</span><span class="ch">K</span></span>
+            </h1>
+            <p class="hero__copy hero__copy--l">Lip colour that winks back.<br>5 shades · 12h wear · zero transfer drama.</p>
+          </div>
+        </div>
+        <div class="hero__half hero__half--r" aria-hidden="true"></div>
+      </div>
+      <div class="hero__theme hero__theme--next" data-layer="next" data-mode="flipped" aria-hidden="true">
+        <div class="hero__half hero__half--l"></div>
+        <div class="hero__half hero__half--r"></div>
+      </div>
+
+      <canvas class="hero__gl" aria-hidden="true"></canvas>
+      <img class="hero__poster" src="assets/hero-poster.webp" alt="" aria-hidden="true">
+
+      <div class="hero__fx" aria-hidden="true"></div>
+
+      <div class="hero__ui">
+        <a class="btn btn--ink magnetic hero__cta" href="#shades" data-cursor="go">
+          <span>Shop the drop</span><span class="btn__price">$24</span>
+        </a>
+        <p class="hero__note">Shot on a wink.<br>Made in a lab.<br>Worn by main characters.</p>
+        <a class="spin-badge" href="#shades" aria-label="Scroll to shades" data-cursor="scroll">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" /></defs>
+            <text><textPath href="#circ">WINK WINK ✦ SCROLL FOR SHADES ✦ WINK WINK ✦ </textPath></text>
+          </svg>
+          <svg class="spin-badge__lips" viewBox="0 0 200 120" aria-hidden="true"><use href="#lips-solid" /></svg>
+        </a>
+        <div class="stickers">
+          <div class="sticker sticker--star" data-cursor="drag me" style="--x:4%;--y:58%;--r:-12deg"><span>NEW<br>DROP</span></div>
+          <div class="sticker sticker--pill" data-cursor="drag me" style="--x:64%;--y:19%;--r:8deg"><span>100% vegan</span></div>
+          <div class="sticker sticker--circle" data-cursor="drag me" style="--x:86%;--y:15%;--r:-6deg"><span>12h<br>no<br>transfer</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TAPES ============ -->
+    <section class="tapes" aria-label="Shade names">
+      <div class="tape tape--wine"><div class="tape__track">
+        <span>MAIN CHARACTER ✦ SOFT LAUNCH ✦ DELULU ✦ VILLAIN ERA ✦ NO CRUMBS ✦&nbsp;</span>
+      </div></div>
+      <div class="tape tape--acid"><div class="tape__track">
+        <span>12H WEAR ✦ ZERO TRANSFER ✦ 100% VEGAN ✦ REFILLABLE ✦ WINK-TESTED ✦&nbsp;</span>
+      </div></div>
+    </section>
+
+    <!-- ============ MANIFESTO ============ -->
+    <section class="manifesto" aria-label="About mwah.">
+      <p class="manifesto__eyebrow"><span>(01)</span> the vibe</p>
+      <p class="manifesto__text">
+        Not your mom's lipstick
+        <span class="pill-media" aria-hidden="true"><video class="pill-media__video" muted loop playsinline preload="none" poster="assets/shades-poster.jpg"></video></span>
+        <span class="nowrap">(unless she's <span class="scribble">iconic<svg viewBox="0 0 220 90" preserveAspectRatio="none" aria-hidden="true"><path d="M18 52C14 22 82 8 132 10c48 2 82 18 74 40-8 24-78 34-130 28C34 74 4 62 12 40 20 20 70 12 112 14" /></svg></span>).</span>
+        Five shades
+        <span class="swatch-stack" aria-hidden="true"><i style="--c:#8a0b14"></i><i style="--c:#c37167"></i><i style="--c:#cf513f"></i><i style="--c:#682033"></i><i style="--c:#6c2e22"></i></span>
+        twelve hours, zero transfer drama. Wink once for <em>classic.</em> Wink twice for <em class="chaos">chaos.</em>
+      </p>
+      <div class="manifesto__stats">
+        <div class="stat"><b data-count="12">0</b><span>hours of wear</span></div>
+        <div class="stat"><b data-count="0">0</b><span>transfer onto your iced latte</span></div>
+        <div class="stat"><b data-count="100">0</b><span>% vegan &amp; cruelty-free</span></div>
+        <div class="stat"><b data-count="5">0</b><span>shades, one for every era</span></div>
+      </div>
+    </section>
+
+    <!-- ============ SHADE LAB ============ -->
+    <section class="shades" id="shades" aria-label="Shade lab">
+      <div class="shades__stage">
+        <div class="shades__media">
+          <video class="shades__video" muted playsinline preload="auto" poster="assets/shades-poster.jpg"></video>
+        </div>
+        <div class="shades__shade-glow" aria-hidden="true"></div>
+
+        <div class="shades__top">
+          <p class="shades__eyebrow"><span>(02)</span> shade lab</p>
+          <p class="shades__hint">scroll to swatch · tap a lipstick</p>
+        </div>
+
+        <div class="shades__info">
+          <div class="shades__index"><span class="shades__num">01</span><span class="shades__total">/05</span></div>
+          <h2 class="shades__name" aria-live="polite"><span class="shades__name-inner">Main Character</span></h2>
+          <p class="shades__family">Cherry red · High-shine</p>
+        </div>
+
+        <div class="shades__side">
+          <p class="shades__line">Walks in like the soundtrack just dropped.</p>
+          <div class="shades__meta">
+            <span class="chip"><i class="chip__dot"></i><span class="shades__hex">#8A0B14</span></span>
+            <span class="chip">$24 · 3.5g</span>
+          </div>
+          <button class="btn btn--ghost magnetic shades__add" type="button" data-cursor="add">add to bag +</button>
+        </div>
+
+        <div class="rail" role="tablist" aria-label="Choose a shade"></div>
+        <div class="shades__progress" aria-hidden="true"><i></i></div>
+      </div>
+    </section>
+
+    <!-- ============ THE BULLET (3D) ============ -->
+    <section class="bullet" id="bullet" aria-label="The bullet">
+      <div class="bullet__stage">
+        <canvas class="bullet__gl" aria-hidden="true" data-cursor="drag to spin"></canvas>
+        <div class="bullet__head">
+          <p class="bullet__eyebrow"><span>(03)</span> the bullet</p>
+          <h2 class="bullet__title">Twist up.<br><em>Show off.</em></h2>
+        </div>
+        <ol class="bullet__feats">
+          <li data-at="0"><span>01</span><div><b>Magnetic click cap</b><p>Snaps shut. Refillable case you'll keep forever.</p></div></li>
+          <li data-at="1"><span>02</span><div><b>12h colour-lock core</b><p>Sets in 60 seconds. Survives brunch, gym, situationship.</p></div></li>
+          <li data-at="2"><span>03</span><div><b>Squalane + shea + HA</b><p>Cushy, never cakey. Your lips stay soft under all that drama.</p></div></li>
+          <li data-at="3"><span>04</span><div><b>Slant-cut tip</b><p>Precision edge for the cupid's bow, no liner required.</p></div></li>
+        </ol>
+        <div class="bullet__picker">
+          <p class="bullet__picked">Main Character</p>
+          <div class="bullet__swatches" role="radiogroup" aria-label="Bullet colour"></div>
+          <button class="btn btn--ink magnetic bullet__add" type="button" data-cursor="add"><span>add to bag</span><span class="btn__price">$24</span></button>
+        </div>
+        <p class="bullet__drag" aria-hidden="true">← drag to spin →</p>
+      </div>
+    </section>
+
+    <!-- ============ KISS WALL ============ -->
+    <section class="kiss" id="kiss" aria-label="Kiss wall" data-cursor="kiss!">
+      <div class="kiss__layer" aria-hidden="true"></div>
+      <div class="kiss__head">
+        <p class="kiss__eyebrow"><span>(04)</span> kiss wall</p>
+        <h2 class="kiss__title">Leave a <em>kiss.</em></h2>
+        <p class="kiss__sub">Tap anywhere. Your shade, your mark. <b class="kiss__count">1,284,551</b> kisses and counting.</p>
+        <div class="kiss__tools">
+          <div class="kiss__swatches" role="radiogroup" aria-label="Kiss colour"></div>
+          <button class="btn btn--ghost kiss__clear" type="button" data-cursor="wipe">wipe wall</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ REVIEWS ============ -->
+    <section class="reviews" id="reviews" aria-label="Reviews">
+      <div class="reviews__head">
+        <p class="reviews__eyebrow"><span>(05)</span> reviews, unfiltered</p>
+        <h2 class="reviews__title">The comments<br>section <em>ate.</em></h2>
+        <p class="reviews__hint">drag them around, they don't mind</p>
+      </div>
+      <div class="board">
+        <article class="card card--score" style="--x:6%;--y:8%;--r:-4deg">
+          <b>4.9</b><span>★★★★★</span><p>from 12,480 kisses</p>
+        </article>
+        <article class="card" style="--x:30%;--y:2%;--r:3deg;--c:#8a0b14">
+          <header><i></i>@cherrycola.mp3</header>
+          <p>wore <b>Main Character</b> to a 9am lecture. still on at 2am karaoke. it's giving permanent.</p>
+          <footer>★★★★★ · Main Character</footer>
+        </article>
+        <article class="card card--blush" style="--x:58%;--y:6%;--r:-2deg;--c:#c37167">
+          <header><i></i>@lowkeyleila</header>
+          <p><b>Soft Launch</b> is my lips but they got 8 hours of sleep and drank water.</p>
+          <footer>★★★★★ · Soft Launch</footer>
+        </article>
+        <article class="card card--acid" style="--x:80%;--y:16%;--r:5deg;--c:#cf513f">
+          <header><i></i>@juno.exe</header>
+          <p>bought <b>Delulu</b> for the name. stayed for the formula. now i'm delulu about everything.</p>
+          <footer>★★★★★ · Delulu</footer>
+        </article>
+        <article class="card card--wine" style="--x:12%;--y:46%;--r:4deg;--c:#682033">
+          <header><i></i>@sam.not.samantha</header>
+          <p><b>Villain Era</b> doesn't transfer onto my iced latte straw. witchcraft, honestly.</p>
+          <footer>★★★★★ · Villain Era</footer>
+        </article>
+        <article class="card" style="--x:40%;--y:42%;--r:-5deg;--c:#6c2e22">
+          <header><i></i>@itsmarisolll</header>
+          <p><b>No Crumbs</b> ate. left no crumbs. obviously. the name was a warning.</p>
+          <footer>★★★★★ · No Crumbs</footer>
+        </article>
+        <article class="card card--blush" style="--x:66%;--y:48%;--r:2deg;--c:#8a0b14">
+          <header><i></i>@deadline.dolly</header>
+          <p>the wink ad lives in my head rent free. i wink at my mirror now. is that normal</p>
+          <footer>★★★★☆ · Main Character</footer>
+        </article>
+        <article class="card card--polaroid" style="--x:84%;--y:56%;--r:-7deg">
+          <div class="card__img"></div>
+          <p>me after one swipe ↑</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq" id="faq" aria-label="FAQ">
+      <div class="faq__head">
+        <p class="faq__eyebrow"><span>(06)</span> real talk</p>
+        <h2 class="faq__title">Questions,<br><em>answered.</em></h2>
+      </div>
+      <div class="faq__list">
+        <details><summary><span>Does it actually not transfer?</span><i></i></summary><div><p>Once it sets (60 seconds, tops) it stays put through coffee, cocktails and kisses. Melts off with any oil cleanser.</p></div></details>
+        <details><summary><span>Is it vegan &amp; cruelty-free?</span><i></i></summary><div><p>100%. No animal-derived ingredients, never tested on animals, and we'd never ask a bunny to wear lipstick.</p></div></details>
+        <details><summary><span>Will it dry out my lips?</span><i></i></summary><div><p>Squalane, shea butter and hyaluronic acid keep it cushy for the full 12 hours. No flaking, no cracking, no crumbs.</p></div></details>
+        <details><summary><span>Can I refill the case?</span><i></i></summary><div><p>Yes. The case is forever; bullets twist in and out. Refills are $16 and ship plastic-free.</p></div></details>
+        <details><summary><span>How fast is shipping?</span><i></i></summary><div><p>2–4 days, free over $40, in a box you'll absolutely keep for no reason.</p></div></details>
+      </div>
+    </section>
+
+    <!-- ============ KIT + FOOTER ============ -->
+    <section class="kit" aria-label="The Wink Kit">
+      <div class="kit__card">
+        <div class="kit__tubes" aria-hidden="true"></div>
+        <div class="kit__copy">
+          <p class="kit__eyebrow">the wink kit</p>
+          <h2 class="kit__title">All five. <em>One bag.</em></h2>
+          <p class="kit__price"><b>$98</b> <s>$120</s> <span>save $22</span></p>
+          <button class="btn btn--acid magnetic kit__add" type="button" data-cursor="yes">add the kit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__top">
+      <form class="footer__form" novalidate>
+        <label for="email">Early drops, zero spam.</label>
+        <div class="footer__field">
+          <input id="email" type="email" placeholder="your@email.com" autocomplete="email" required>
+          <button class="btn btn--acid" type="submit" data-cursor="join">join</button>
+        </div>
+        <p class="footer__msg" role="status"></p>
+      </form>
+      <nav class="footer__links" aria-label="Social">
+        <a href="#" data-cursor="↗">instagram</a>
+        <a href="#" data-cursor="↗">tiktok</a>
+        <a href="#" data-cursor="↗">pinterest</a>
+        <a href="#top" data-cursor="↑">back to top</a>
+      </nav>
+    </div>
+    <div class="footer__mark" aria-label="mwah.">
+      <span>m</span><span>w</span><span>a</span><span>h</span><span>.</span>
+    </div>
+    <div class="footer__base">
+      <span>© 2026 mwah. lip lab</span>
+      <span>made with a wink</span>
+      <span>vegan · cruelty-free · refillable</span>
+    </div>
+  </footer>
+
+  <!-- Bag drawer -->
+  <aside class="bag" aria-label="Your bag" aria-hidden="true">
+    <div class="bag__scrim"></div>
+    <div class="bag__panel" role="dialog" aria-modal="true" aria-labelledby="bag-title">
+      <header class="bag__head">
+        <h3 id="bag-title">your bag</h3>
+        <button class="bag__close" type="button" aria-label="Close bag" data-cursor="close">✕</button>
+      </header>
+      <ul class="bag__list"></ul>
+      <p class="bag__empty">empty bag, full potential. go pick a shade.</p>
+      <footer class="bag__foot">
+        <div class="bag__total"><span>subtotal</span><b class="bag__sum">$0</b></div>
+        <button class="btn btn--ink bag__checkout" type="button" data-cursor="pay">checkout</button>
+      </footer>
+    </div>
+  </aside>
+
+  <!-- gsap 3.13.0, lenis 1.1.20, three 0.160.0 -->
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/Draggable.min.js"></script>
+  <script src="vendor/InertiaPlugin.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

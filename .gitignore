@@ -1,0 +1,8 @@
+# local tooling
+.claude/
+.vercel/
+.env*
+__pycache__/
+
+# the 66 MB showcase render lives outside the repo
+showcase/
